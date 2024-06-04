@@ -1,7 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 import textwrap
-from typing import List, Optional, Generator
+from typing import (
+    List,
+    Optional,
+    Generator,
+)
 
 
 class AccountsIterator:
@@ -26,13 +30,14 @@ class AccountsIterator:
             raise StopIteration
 
 
+def make_transaction(account: 'Account', transaction: 'Transaction'):
+    transaction.register(account)
+
+
 class Client:
     def __init__(self, address: str):
         self.address = address
         self.accounts: List[Account] = []
-
-    def make_transaction(self, account: 'Account', transaction: 'Transaction'):
-        transaction.register(account)
 
     def add_account(self, account: 'Account'):
         self.accounts.append(account)
@@ -254,7 +259,7 @@ def deposit(clients: List[Individual]):
     if not account:
         return
 
-    client.make_transaction(account, transaction)
+    make_transaction(account, transaction)
 
 
 @log_transaction
@@ -273,7 +278,7 @@ def withdraw(clients: List[Individual]):
     if not account:
         return
 
-    client.make_transaction(account, transaction)
+    make_transaction(account, transaction)
 
 
 @log_transaction
@@ -390,4 +395,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
